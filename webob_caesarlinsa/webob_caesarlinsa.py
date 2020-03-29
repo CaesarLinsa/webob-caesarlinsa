@@ -3,22 +3,7 @@ import routes.middleware
 from webob.dec import wsgify
 import webob.exc
 import six
-from webob_caesarlinsa.controller.v1.demo_controller import create_handler
-
-
-class Handler(object):
-
-    def __init__(self, controller):
-        self.controller = controller
-
-    @wsgify
-    def __call__(self, req):
-        match = req.environ["wsgiorg.routing_args"][1]
-        action = match.pop("action", None)
-        method = getattr(self.controller, action)
-        if match:
-            return method(req, **match)
-        return method(req)
+from .controller.v1.demo_controller import create_handler
 
 
 class Router(object):
@@ -43,18 +28,18 @@ class Router(object):
         connect(controller=demo,
                 routes=[
                     {
-                        'url': '/v1/index/{name}',
+                        'url': '/index/{name}',
                         'action': 'index',
                         'method': ["GET"]
                     },
                     {
-                        "url": "/v1/hello",
+                        "url": "/hello",
                         "action": "hello",
                         "method": ["GET"]
 
                     },
                     {
-                        "url": "/v1/params_show",
+                        "url": "/params_show",
                         "action": "params_show",
                         "method": ["GET"]
                     }

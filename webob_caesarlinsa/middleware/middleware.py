@@ -23,7 +23,7 @@ class Middleware(object):
         response = self.process_request(req)
         if response:
             return response
-        response = req.get_response(req)
+        response = req.get_response(self.application)
         return self.process_response(response)
 
 

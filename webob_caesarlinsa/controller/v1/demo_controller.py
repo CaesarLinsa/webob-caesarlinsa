@@ -1,5 +1,5 @@
 from webob.response import Response
-from webob_caesarlinsa.webob_caesarlinsa import Handler
+from webob_caesarlinsa.handler import Handler
 
 
 class DemoController(object):
