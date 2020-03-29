@@ -8,11 +8,11 @@ class VersionController(object):
 
     @webob.dec.wsgify
     def __call__(self, req):
-        version_obj = [{
+        version_obj = {
             "version": "1.0",
             "author": "caesarlinsa",
             "url": self.get_href(req)
-        }]
+        }
         body_str = json.dumps(dict(version_obj))
         response = webob.response.Response(request=req,
                                            status=http_client.MULTIPLE_CHOICES,

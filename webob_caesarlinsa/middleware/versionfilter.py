@@ -8,7 +8,7 @@ LOG = logging.getLogger(__name__)
 
 class VersionFilter(Middleware):
 
-    def __init__(self, app, conf, **local_conf):
+    def __init__(self, app):
         self.application = app
         self.version = VersionController()
         self.version_uri_regex = re.compile(r"^v(\d+)\.?(\d+)?")
@@ -20,7 +20,7 @@ class VersionFilter(Middleware):
                                'path': req.path, 'accept': req.accept})
         LOG.info(msg)
 
-        if req.path_peek_info() in ("version", ""):
+        if req.path_info_peek() in ("version", ""):
             return self.version
         match = self.match_version_string(req.path_info_peek(), req)
         if match:
@@ -54,3 +54,10 @@ class VersionFilter(Middleware):
             req.environ['api.major_version'] = major_version
             req.environ['api.minor_version'] = minor_version
         return match is not None
+
+
+def version_filter(local_conf, **global_conf):
+    def filter(app):
+        return VersionFilter(app)
+
+    return filter

@@ -1,28 +1,9 @@
 import routes
 import routes.middleware
-from webob.response import Response
 from webob.dec import wsgify
 import webob.exc
 import six
-
-
-class DemoController(object):
-
-    def index(self, req, name):
-        return Response("hello world %s"
-                        % name)
-
-    def hello(self, req):
-        return Response("hello")
-
-    def params_show(self, req):
-        params = ' '.join(["%s %s" % (k, v)
-                           for k, v in req.params.items()])
-        return Response("req: %s" % params)
-
-
-def create_handler():
-    return Handler(DemoController())
+from webob_caesarlinsa.controller.v1.demo_controller import create_handler
 
 
 class Handler(object):
@@ -42,8 +23,8 @@ class Handler(object):
 
 class Router(object):
 
-    def __init__(self, conf, **local_conf):
-        self.conf = conf
+    def __init__(self, local_conf, **global_conf):
+        self.conf = local_conf
         self.mapper = routes.mapper.Mapper()
 
         def connect(controller, routes):
@@ -62,18 +43,18 @@ class Router(object):
         connect(controller=demo,
                 routes=[
                     {
-                        'url': '/index/{name}',
+                        'url': '/v1/index/{name}',
                         'action': 'index',
                         'method': ["GET"]
                     },
                     {
-                        "url": "/hello",
+                        "url": "/v1/hello",
                         "action": "hello",
                         "method": ["GET"]
 
                     },
                     {
-                        "url": "/params_show",
+                        "url": "/v1/params_show",
                         "action": "params_show",
                         "method": ["GET"]
                     }
@@ -95,4 +76,3 @@ class Router(object):
             return controller
         except Exception as e:
             raise e
-
