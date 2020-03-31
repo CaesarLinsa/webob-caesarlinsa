@@ -78,7 +78,7 @@ def version_filter(local_conf, **global_conf):
     return filter
 ```
 
-VersionFilter 继承Middleware类，实例化时，调用其`__callable__`方法，基类实现`process_request`， 调用过滤器中的process_request进行到达app前处理。
+VersionFilter 继承Middleware类，实例化时，调用其`__callable__`方法，基类不实现`process_request`， 调用过滤器中的process_request进行到达app前处理。
 
 `__callable__`方法：
 
