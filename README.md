@@ -78,9 +78,9 @@ def version_filter(local_conf, **global_conf):
     return filter
 ```
 
-VersionFilter 继承Middleware类，实例化时，调用其`__callable__`方法，基类不实现`process_request`， 调用过滤器中的process_request进行到达app前处理。
+VersionFilter 继承Middleware类，实例化时，调用其`__call__`方法，基类不实现`process_request`， 调用过滤器中的process_request进行到达app前处理。
 
-`__callable__`方法：
+`__call__`方法：
 
 ```python
     @webob.dec.wsgify
@@ -148,7 +148,7 @@ VersionFilter 继承Middleware类，实例化时，调用其`__callable__`方法
             raise e
 ```
 
-实例化对象初始化时，调用其`__callable__`方法，此方法在handler.py中，为每个controller在自己的controller 模块外注册的方法。
+实例化对象初始化时，调用其`__call__`方法，此方法在handler.py中，为每个controller在自己的controller 模块外注册的方法。
 
 ```python
 class Handler(object):
@@ -166,7 +166,7 @@ class Handler(object):
         return method(req)
 ```
 
-`__callable__` 获取请求中action和方法参数，从而调用controller中的方法。如demoController中注册Handler，如下：
+`__call__` 获取请求中action和方法参数，从而调用controller中的方法。如demoController中注册Handler，如下：
 
 ```python
 def create_handler():
