@@ -16,7 +16,7 @@ python setup.py install
 **webob-caesarlinsa** 是个轻量型的python web框架。
 
 * 内核自带的webob和routes wsgi接口，实现请求分发调用。
-* server 使用wsgiref中maker_server 。 **TODO**使用eventlet 协程库，提高并发性能。
+* 使用eventlet 协程库，提高并发性能。
 
 * PasteDeploy请求过滤和拦截处理
 

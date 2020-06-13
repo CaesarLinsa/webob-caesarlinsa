@@ -1,13 +1,15 @@
 from paste import deploy
-from wsgiref import simple_server
+from webob_caesarlinsa.ConfigParse import ConfigParse
 import logging
 from webob_caesarlinsa import log_util
+from webob_caesarlinsa.wsgi import Server
 
 LOG = logging.getLogger(__name__)
+cp = ConfigParse("/etc/webob-caesarlinsa/webob_caesarlinsa.conf")
+cf_defaults = cp.read_file().get("default")
 
 log_util.setup(level=logging.DEBUG,
-               outs=[log_util.RotatingFile(filename="/var/log/caesarlinsa"
-                                                    "/webob_caesarlinsa.log",
+               outs=[log_util.RotatingFile(filename=cf_defaults.get("log_file"),
                                            level=logging.DEBUG,
                                            max_size_bytes=1000000,
                                            backup_count=10)],
@@ -17,10 +19,11 @@ log_util.setup(level=logging.DEBUG,
 
 def main():
     try:
-        api_paste = "/etc/webob-caesarlinsa/api-paste.ini"
+        api_paste = cf_defaults.get("api_paste_path")
         app = deploy.loadapp("config:%s" % api_paste, name="webob-caesarlinsa")
-        server = simple_server.make_server('', 9000, app)
-        server.serve_forever()
+        server = Server(cf_defaults)
+        server.start(app)
+        server.wait()
     except Exception as e:
         LOG.info("caught an exception :%s" % (str(e)))
         raise e
