@@ -1,11 +1,13 @@
 from paste import deploy
-from webob_caesarlinsa.ConfigParse import ConfigParse
 import logging
+
+from webob_caesarlinsa.ConfigParse import ConfigParse
 from webob_caesarlinsa import log_util
 from webob_caesarlinsa.wsgi import Server
 
 LOG = logging.getLogger(__name__)
-cp = ConfigParse("/etc/webob-caesarlinsa/webob_caesarlinsa.conf")
+cp = ConfigParse("/etc/webob-caesarlinsa"
+                 "/webob_caesarlinsa.conf")
 cf_defaults = cp.read_file().get("default")
 
 log_util.setup(level=logging.DEBUG,

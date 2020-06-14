@@ -3,7 +3,7 @@ import signal
 import time
 import logging
 import errno
-import  sys
+import sys
 import eventlet.wsgi
 import eventlet
 from eventlet.green import socket
@@ -16,7 +16,9 @@ URL_LENGTH_LIMIT = 50000
 
 def get_bind_addr(conf, default_port=None):
     """Return the host and port to bind to."""
-    return (conf.get("bind_host") or '0.0.0.0', int(conf.get("port")) or default_port)
+    return (conf.get("bind_host") or '0.0.0.0',
+            int(conf.get("port")) or default_port)
+
 
 def get_socket(conf, default_port):
     """Bind socket to bind ip:port in conf.
@@ -31,7 +33,7 @@ def get_socket(conf, default_port):
     """
     bind_addr = get_bind_addr(conf, default_port)
     address_family = [addr[0] for addr in socket.getaddrinfo(bind_addr[0],
-                      bind_addr[1], socket.AF_UNSPEC, socket.SOCK_STREAM)
+                                                             bind_addr[1], socket.AF_UNSPEC, socket.SOCK_STREAM)
                       if addr[0] in (socket.AF_INET, socket.AF_INET6)][0]
 
     cert_file = conf.get("cert_file")
@@ -125,6 +127,7 @@ class Server(object):
     def wait_on_children(self):
         while self.running:
             try:
+                # 进程常驻
                 pid, status = os.wait()
                 # 进程因exit退出或者 signal退出
                 if os.WIFEXITED(status) or os.WIFSIGNALED(status):
@@ -176,14 +179,14 @@ class Server(object):
         """
         # Do we need a fresh socket?
         new_sock = (old_conf is None or (
-                    has_changed('bind_host') or
-                    has_changed('bind_port')))
+                has_changed('bind_host') or
+                has_changed('bind_port')))
         # Will we be using https?
         use_ssl = not (not self.conf.get("cert_file") or not self.conf.get("key_file"))
         # Were we using https before?
         old_use_ssl = (old_conf is not None and not (
-                       not old_conf.get('key_file') or
-                       not old_conf.get('cert_file')))
+                not old_conf.get('key_file') or
+                not old_conf.get('cert_file')))
         # Do we now need to perform an SSL wrap on the socket?
         wrap_sock = use_ssl is True and (old_use_ssl is False or new_sock)
         # Do we now need to perform an SSL unwrap on the socket?
